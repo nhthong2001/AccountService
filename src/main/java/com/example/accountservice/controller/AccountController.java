@@ -5,12 +5,10 @@ import com.example.accountservice.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/account")
@@ -28,9 +26,12 @@ public class AccountController {
     }
 
     @GetMapping("/{username}")
-    public  ResponseEntity<Account> getAccountByUsername(@PathVariable("username") String username){
-        Account account = accountService.findAccountByUsername(username);
-        if (account == null) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(account, HttpStatus.OK);
+    public ResponseEntity<Optional<Account>> getAccountByUsername(@PathVariable("username") String username){
+        return new ResponseEntity<>(accountService.findAccountByUsername(username), HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<Account> updateAccount(@RequestBody Account account){
+        return new ResponseEntity<>(accountService.updateAccount(account), HttpStatus.OK);
     }
 }
